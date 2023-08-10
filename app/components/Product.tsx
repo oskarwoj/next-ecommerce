@@ -1,18 +1,19 @@
-import { formatPrice } from "@/util/formatPrice";
 import Image from "next/image";
+
+import { formatPrice } from "@/util/formatPrice";
 
 interface ProductProps {
   name: string;
   image: string;
-  prices: number | null;
+  price: number | null;
 }
 
-const Product: React.FC<ProductProps> = ({ name, image, prices }) => {
+const Product: React.FC<ProductProps> = ({ name, image, price }) => {
   return (
     <div>
       <Image src={image} width={400} height={400} alt={name} />
       <h1>{name}</h1>
-      {formatPrice(prices as number)}
+      {formatPrice(price)}
     </div>
   );
 };
