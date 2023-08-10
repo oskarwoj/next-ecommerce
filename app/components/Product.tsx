@@ -11,7 +11,14 @@ interface ProductProps {
 const Product: React.FC<ProductProps> = ({ name, image, price }) => {
   return (
     <div>
-      <Image src={image} width={400} height={400} alt={name} />
+      <Image
+        src={image}
+        width={800}
+        height={800}
+        alt={name}
+        className="w-full h-80 object-cover"
+        priority={true}
+      />
       <h1>{name}</h1>
       {formatPrice(price)}
     </div>
