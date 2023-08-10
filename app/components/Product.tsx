@@ -16,11 +16,11 @@ const Product: React.FC<ProductProps> = ({ name, image, price }) => {
         width={800}
         height={800}
         alt={name}
-        className="w-full h-80 object-cover"
+        className="w-full h-80 object-cover cursor-pointer hover:scale-105 transition-all duration-300 ease-in-out rounded-md"
         priority={true}
       />
-      <h1>{name}</h1>
-      {formatPrice(price)}
+      <h1 className="text-sm font-semibold pt-4">{name}</h1>
+      <p>{formatPrice(price)}</p>
     </div>
   );
 };
