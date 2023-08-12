@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { createJSONStorage, persist } from "zustand/middleware";
 
 interface CartItem {
   name: string;
@@ -13,6 +13,7 @@ interface CartItem {
 interface CartStore {
   isOpen: boolean;
   cart: CartItem[];
+  toggleCart: () => void;
 }
 
 export const useCartStore = create<CartStore>()(
@@ -20,7 +21,8 @@ export const useCartStore = create<CartStore>()(
     (set) => ({
       cart: [],
       isOpen: false,
+      toggleCart: () => set((state) => ({ isOpen: !state.isOpen })),
     }),
-    { name: "cart-store" }
+    { name: "cart-store", storage: createJSONStorage(() => localStorage) }
   )
 );
