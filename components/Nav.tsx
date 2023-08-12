@@ -3,11 +3,15 @@
 import { Session } from "next-auth";
 import { signIn } from "next-auth/react";
 import Image from "next/image";
+import Link from "next/link";
 
 const Nav: React.FC<Session> = ({ user }) => {
   return (
     <nav className="flex justify-between items-center py-8">
-      <h1>Nav</h1>
+      <Link href="/">
+        <h1>Back</h1>
+      </Link>
+
       <ul className="flex items-center gap-12">
         {user ? (
           <>

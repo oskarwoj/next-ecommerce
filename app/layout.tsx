@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import Nav from "@/app/components/Nav";
+import Nav from "@/components/Nav";
 
 import { getServerSession } from "next-auth";
 import { authOptions } from "./api/auth/[...nextauth]/route";
