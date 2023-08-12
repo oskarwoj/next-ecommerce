@@ -10,6 +10,7 @@ const ProductPage = async ({ searchParams }: SearchParamTypes) => {
         width={600}
         height={600}
         alt={searchParams.name}
+        className="w-full h-80 object-cover  rounded-lg"
       />
       <div className="font-medium text-gray-700">
         <h1 className="text-2xl font-medium py-2">{searchParams.name}</h1>

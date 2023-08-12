@@ -1,22 +1,25 @@
 "use client";
 
-import Cart from "@/components/Cart";
-import { useCartStore } from "@/store/store";
-import { ShoppingBag } from "lucide-react";
+import { ArrowLeft, ShoppingBag } from "lucide-react";
 import { Session } from "next-auth";
 import { signIn } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+
+import Cart from "@/components/Cart";
+import { useCartStore } from "@/hooks/store";
 
 const Nav: React.FC<Session> = ({ user }) => {
+  const pathname = usePathname();
   const cartStore = useCartStore();
+
+  const isHomePage = pathname === "/";
 
   return (
     <nav>
       <div className="flex justify-between items-center py-12">
-        <Link href="/">
-          <h1>Back</h1>
-        </Link>
+        <Link href="/">{!isHomePage && <ArrowLeft size={36} />}</Link>
         <ul className="flex items-center gap-12">
           <li
             onClick={cartStore.toggleCart}
