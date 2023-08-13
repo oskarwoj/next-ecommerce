@@ -19,21 +19,27 @@ export const useCartStore = create<CartStore>()(
       toggleCart: () => set((state) => ({ isOpen: !state.isOpen })),
       addProduct: (product) => {
         const currentItems = get().cart;
-        const existingItemIndex = currentItems.findIndex(
-          (item) => product.id === item.id
+        const existingItem = currentItems.find(
+          (item) => item.id === product.id
         );
 
-        if (existingItemIndex !== -1) {
-          toast.success("Item added to cart.");
-          const updatedCart = [...currentItems];
-          updatedCart[existingItemIndex] = {
-            ...updatedCart[existingItemIndex],
-            quantity: (updatedCart[existingItemIndex]?.quantity ?? 1) + 1,
-          };
-          set({ cart: updatedCart });
+        if (existingItem) {
+          toast.success("Updated item quantity");
+          return currentItems.map((cartItem) => {
+            if (cartItem.id === product.id) {
+              set({
+                cart: [
+                  {
+                    ...cartItem,
+                    quantity: (cartItem.quantity ?? 1) + 1,
+                  },
+                ],
+              });
+            }
+          });
         } else {
           toast.success("Item added to cart.");
-          set({ cart: [...get().cart, { ...product, quantity: 1 }] });
+          set({ cart: [...currentItems, { ...product, quantity: 1 }] });
         }
       },
       removeProduct: (item) => {},
