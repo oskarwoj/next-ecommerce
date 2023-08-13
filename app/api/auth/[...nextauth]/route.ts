@@ -8,6 +8,7 @@ const prismadb = new PrismaClient();
 
 export const authOptions: AuthOptions = {
   adapter: PrismaAdapter(prismadb) as any,
+  secret: process.env.NEXTAUTH_SECRET,
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID as string,

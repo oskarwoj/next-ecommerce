@@ -3,6 +3,7 @@
 import Image from "next/image";
 
 import { useCartStore } from "@/hooks/store";
+import basket from "@/public/basket.png";
 import { formatPrice } from "@/util/formatPrice";
 import { MinusCircle, PlusCircle } from "lucide-react";
 
@@ -18,7 +19,6 @@ const Cart = () => {
         onClick={(e) => e.stopPropagation()}
         className="bg-white absolute right-0 top-0 w-1/4 overflow-y-auto h-screen p-12 text-gray-700"
       >
-        <h1>Here&apos;s your cart📃</h1>
         {cartStore.cart.map((item) => (
           <div key={item.id} className="flex py-4 gap-4">
             <Image
@@ -63,9 +63,16 @@ const Cart = () => {
             </div>
           </div>
         ))}
-        <button className="py-2 mt-4 bg-teal-700 w-full rounded-md text-white">
-          Checkout
-        </button>
+        {!cartStore.cart.length ? (
+          <div className="flex flex-col items-center gap-12 text-2xl font-medium opacity-75 mt-12">
+            <h1>Your cart is empty 😢</h1>
+            <Image src={basket} width={200} height={200} alt="basket" />
+          </div>
+        ) : (
+          <button className="py-2 mt-4 bg-teal-700 w-full rounded-md text-white">
+            Checkout
+          </button>
+        )}
       </div>
     </div>
   );
