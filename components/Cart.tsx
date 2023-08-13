@@ -15,7 +15,7 @@ const Cart = () => {
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="bg-white absolute right-0 top-0 w-1/4 h-screen p-12 text-gray-700"
+        className="bg-white absolute right-0 top-0 w-1/4 overflow-y-auto h-screen p-12 text-gray-700"
       >
         <h1>Here&apos;s your cart📃</h1>
         {cartStore.cart.map((item) => (

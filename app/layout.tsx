@@ -4,6 +4,7 @@ import Nav from "@/components/Nav";
 
 import Hydrate from "@/components/Hydrate";
 import { getServerSession } from "next-auth";
+import { Toaster } from "react-hot-toast";
 import { authOptions } from "./api/auth/[...nextauth]/route";
 import "./globals.css";
 
@@ -23,6 +24,7 @@ export default async function RootLayout({
     <html lang="en">
       <body className="mx-64">
         <Hydrate>
+          <Toaster />
           <Nav user={session?.user} expires={session?.expires as string} />
           {children}
         </Hydrate>
