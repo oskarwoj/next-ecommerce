@@ -4,6 +4,7 @@ import Image from "next/image";
 
 import { useCartStore } from "@/hooks/store";
 import { formatPrice } from "@/util/formatPrice";
+import { MinusCircle, PlusCircle } from "lucide-react";
 
 const Cart = () => {
   const cartStore = useCartStore();
@@ -29,7 +30,35 @@ const Cart = () => {
             />
             <div>
               <h2>{item.name}</h2>
-              <h2>Quantity: {item.quantity}</h2>
+              <div className="flex gap-2">
+                <h2>Quantity: {item.quantity}</h2>
+                <button
+                  onClick={() =>
+                    cartStore.removeProduct({
+                      id: item.id,
+                      name: item.name,
+                      quantity: item.quantity,
+                      unit_amount: item.unit_amount,
+                      image: item.image,
+                    })
+                  }
+                >
+                  <MinusCircle />
+                </button>
+                <button
+                  onClick={() =>
+                    cartStore.addProduct({
+                      id: item.id,
+                      name: item.name,
+                      quantity: item.quantity,
+                      unit_amount: item.unit_amount,
+                      image: item.image,
+                    })
+                  }
+                >
+                  <PlusCircle />
+                </button>
+              </div>
               <p className="text-sm">{formatPrice(item.unit_amount)}</p>
             </div>
           </div>
