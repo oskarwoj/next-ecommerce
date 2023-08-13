@@ -9,6 +9,7 @@ import { usePathname } from "next/navigation";
 
 import Cart from "@/components/Cart";
 import { useCartStore } from "@/hooks/store";
+import { AnimatePresence, motion } from "framer-motion";
 
 const Nav: React.FC<Session> = ({ user }) => {
   const pathname = usePathname();
@@ -26,9 +27,18 @@ const Nav: React.FC<Session> = ({ user }) => {
             className="flex items-center text-3xl relative cursor-pointer"
           >
             <ShoppingBag />
-            <span className="bg-teal-700 text-white text-sm font-bold w-5 h-5 rounded-full absolute left-4 bottom-4 flex items-center justify-center">
-              {cartStore.cart.length}
-            </span>
+            {cartStore.cart.length > 0 && (
+              <AnimatePresence>
+                <motion.span
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  exit={{ scale: 0 }}
+                  className="bg-teal-700 text-white text-sm font-bold w-5 h-5 rounded-full absolute left-4 bottom-4 flex items-center justify-center"
+                >
+                  {cartStore.cart.length}
+                </motion.span>
+              </AnimatePresence>
+            )}
           </li>
           {user ? (
             <li>
@@ -46,7 +56,7 @@ const Nav: React.FC<Session> = ({ user }) => {
             </li>
           )}
         </ul>
-        {cartStore.isOpen && <Cart />}
+        <AnimatePresence>{cartStore.isOpen && <Cart />}</AnimatePresence>
       </div>
     </nav>
   );
