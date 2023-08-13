@@ -25,24 +25,40 @@ export const useCartStore = create<CartStore>()(
 
         if (existingItem) {
           toast.success("Updated item quantity");
-          return currentItems.map((cartItem) => {
+          const updatedCart = currentItems.map((cartItem) => {
             if (cartItem.id === product.id) {
-              set({
-                cart: [
-                  {
-                    ...cartItem,
-                    quantity: (cartItem.quantity ?? 1) + 1,
-                  },
-                ],
-              });
+              return { ...cartItem, quantity: (cartItem.quantity || 1) + 1 };
             }
+            return cartItem;
           });
+          return set({ cart: updatedCart });
         } else {
           toast.success("Item added to cart.");
           set({ cart: [...currentItems, { ...product, quantity: 1 }] });
         }
       },
-      removeProduct: (item) => {},
+      removeProduct: (product) => {
+        const currentItems = get().cart;
+        const existingItem = currentItems.find(
+          (item) => item.id === product.id
+        );
+
+        if (existingItem && existingItem.quantity > 1) {
+          toast.success("Updated item quantity");
+          const updatedCart = currentItems.map((cartItem) => {
+            if (cartItem.id === product.id) {
+              return { ...cartItem, quantity: cartItem.quantity - 1 };
+            }
+            return cartItem;
+          });
+          return set({ cart: updatedCart });
+        } else {
+          toast.success("Item removed from cart.");
+          set({
+            cart: currentItems.filter((item) => item.id !== product.id),
+          });
+        }
+      },
     }),
     { name: "cart-store" }
   )
