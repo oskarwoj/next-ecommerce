@@ -9,6 +9,7 @@ interface SearchParams {
   id: string;
   description: string;
   features: string;
+  quantity: number;
 }
 
 export interface SearchParamTypes {

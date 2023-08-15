@@ -37,7 +37,7 @@ const Cart = () => {
         {cartStore.cart.map((item) => (
           <motion.div layout key={item.id} className="flex py-4 gap-4">
             <Image
-              className="rounded-md h-23 object-cover"
+              className="rounded-md h-23 object-cover w-auto"
               src={item.image}
               width={120}
               height={120}
