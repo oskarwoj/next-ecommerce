@@ -2,7 +2,6 @@ import Stripe from "stripe";
 
 import { AddCartType } from "@/types/AddCartTypes";
 import { prismadb } from "@/util/prismadb";
-import { Product } from "@prisma/client";
 import { getServerSession } from "next-auth/next";
 import { NextResponse } from "next/server";
 import { authOptions } from "../auth/[...nextauth]/route";
@@ -22,6 +21,14 @@ const calculateOrderAmount = (items: AddCartType[]) => {
   return totalPrice;
 };
 
+interface IItemTypes {
+  name: string;
+  description: string;
+  unit_amount: string;
+  image: string;
+  quantity: string;
+}
+
 export async function POST(request: Request) {
   //Get user
   const userSession = await getSession();
@@ -34,25 +41,25 @@ export async function POST(request: Request) {
   const body = await request.json();
   const { items, payment_intent_id } = body;
 
+  const total = calculateOrderAmount(items);
+
   const orderData = {
     //@ts-ignore
     user: { connect: { id: userSession.user?.id } },
-    amount: calculateOrderAmount(items),
+    amount: total,
     currency: "pln",
     status: "pending",
     paymentIntentID: payment_intent_id,
     products: {
-      create: items.map((item: Product) => ({
+      create: items.map((item: IItemTypes) => ({
         name: item.name,
-        description: item.description ?? null,
-        unit_amount: parseFloat(item.unit_amount.toString()),
+        description: item.description || null,
+        unit_amount: parseFloat(item.unit_amount),
         image: item.image,
         quantity: item.quantity,
       })),
     },
   };
-
-  const total = calculateOrderAmount(items);
 
   //Check if the payment intent exists just update the order
   if (payment_intent_id) {
@@ -76,10 +83,10 @@ export async function POST(request: Request) {
             amount: total,
             products: {
               deleteMany: {},
-              create: items.map((item: Product) => ({
+              create: items.map((item: IItemTypes) => ({
                 name: item.name,
-                description: item.description ?? null,
-                unit_amount: parseFloat(item.unit_amount.toString()),
+                description: item.description || null,
+                unit_amount: parseFloat(item.unit_amount),
                 image: item.image,
                 quantity: item.quantity,
               })),
@@ -89,15 +96,15 @@ export async function POST(request: Request) {
       ]);
 
       if (!existing_order) {
-        return new NextResponse("Invalid Payment Intent", { status: 200 });
+        return new NextResponse("Invalid Payment Intent", { status: 400 });
       }
-      return new NextResponse(JSON.stringify(updated_intent), { status: 200 });
+      return NextResponse.json({ paymentIntent: updated_intent });
     }
   } else {
     //Create a new order with prisma
     const paymentIntent = await stripe.paymentIntents.create({
       amount: calculateOrderAmount(items),
-      currency: "usd",
+      currency: "pln",
       automatic_payment_methods: { enabled: true },
     });
 
@@ -106,6 +113,6 @@ export async function POST(request: Request) {
       data: orderData,
     });
 
-    return new NextResponse(JSON.stringify(paymentIntent), { status: 200 });
+    return NextResponse.json({ paymentIntent });
   }
 }

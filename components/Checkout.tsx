@@ -35,8 +35,8 @@ const Checkout = () => {
         if (!data) {
           return;
         }
-        setClientSecret(data.client_secret);
-        cartStore.setPaymentIntent(data.id);
+        setClientSecret(data.paymentIntent.client_secret);
+        cartStore.setPaymentIntent(data.paymentIntent.id);
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
