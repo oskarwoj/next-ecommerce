@@ -8,6 +8,7 @@ interface CartStore {
   isOpen: boolean;
   onCheckout: string;
   totalAmount: () => number;
+  clearCart: () => void;
   toggleCart: () => void;
   addProduct: (item: AddCartType) => void;
   removeProduct: (item: AddCartType) => void;
@@ -29,7 +30,7 @@ export const useCartStore = create<CartStore>()(
           return acc + (item.unit_amount ?? 0) * item.quantity;
         }, 0);
       },
-
+      clearCart: () => set((state) => ({ cart: [] })),
       toggleCart: () => set((state) => ({ isOpen: !state.isOpen })),
       addProduct: (product) => {
         const currentItems = get().cart;

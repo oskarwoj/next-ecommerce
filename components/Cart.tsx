@@ -5,10 +5,11 @@ import basket from "@/public/basket.png";
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 
+import Checkout from "@/components/Checkout";
+import OrderConfirmed from "@/components/OrderConfirmed";
 import { useCartStore } from "@/hooks/store";
 import { formatPrice } from "@/util/formatPrice";
 import { MinusCircle, PlusCircle } from "lucide-react";
-import Checkout from "./Checkout";
 
 export default function Cart() {
   const cartStore = useCartStore();
@@ -119,7 +120,7 @@ export default function Cart() {
         ) : null}
         {/* Checkout Form */}
         {cartStore.onCheckout === "checkout" && <Checkout />}
-
+        {cartStore.onCheckout === "success" && <OrderConfirmed />}
         <AnimatePresence>
           {!cartStore.cart.length && cartStore.onCheckout === "cart" && (
             <motion.div
