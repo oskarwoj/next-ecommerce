@@ -7,6 +7,7 @@ interface CartStore {
   cart: AddCartType[];
   isOpen: boolean;
   onCheckout: string;
+  totalAmount: () => number;
   toggleCart: () => void;
   addProduct: (item: AddCartType) => void;
   removeProduct: (item: AddCartType) => void;
@@ -22,6 +23,13 @@ export const useCartStore = create<CartStore>()(
       isOpen: false,
       paymentIntent: "",
       onCheckout: "cart",
+      totalAmount: () => {
+        const currentItems = get().cart;
+        return currentItems.reduce((acc, item) => {
+          return acc + (item.unit_amount ?? 0) * item.quantity;
+        }, 0);
+      },
+
       toggleCart: () => set((state) => ({ isOpen: !state.isOpen })),
       addProduct: (product) => {
         const currentItems = get().cart;

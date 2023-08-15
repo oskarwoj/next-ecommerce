@@ -1,9 +1,12 @@
 "use client";
 
-import { useCartStore } from "@/hooks/store";
-import { loadStripe } from "@stripe/stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
+import { StripeElementsOptions, loadStripe } from "@stripe/stripe-js";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+
+import CheckoutForm from "@/components/CheckoutForm";
+import { useCartStore } from "@/hooks/store";
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string
@@ -12,7 +15,7 @@ const stripePromise = loadStripe(
 const Checkout = () => {
   const cartStore = useCartStore();
   const router = useRouter();
-  const [, setClientSecret] = useState("");
+  const [clientSecret, setClientSecret] = useState("");
 
   useEffect(() => {
     fetch("/api/create-payment-intent", {
@@ -37,7 +40,26 @@ const Checkout = () => {
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  return <div>Checkout</div>;
+
+  const options: StripeElementsOptions = {
+    clientSecret,
+    appearance: {
+      theme: "stripe",
+      labels: "floating",
+    },
+  };
+
+  return (
+    <div>
+      {clientSecret && (
+        <div>
+          <Elements options={options} stripe={stripePromise}>
+            <CheckoutForm clientSecret={clientSecret} />
+          </Elements>
+        </div>
+      )}
+    </div>
+  );
 };
 
 export default Checkout;

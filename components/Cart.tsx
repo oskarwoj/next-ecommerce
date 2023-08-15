@@ -12,10 +12,6 @@ import Checkout from "./Checkout";
 const Cart = () => {
   const cartStore = useCartStore();
 
-  const totalPrice = cartStore.cart.reduce((acc, item) => {
-    return acc + (item.unit_amount ?? 0) * item.quantity;
-  }, 0);
-
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -29,12 +25,23 @@ const Cart = () => {
         onClick={(e) => e.stopPropagation()}
         className="bg-white absolute right-0 top-0 w-full lg:w-2/5 overflow-y-auto h-screen p-12 text-gray-700"
       >
-        <button
-          onClick={() => cartStore.toggleCart()}
-          className="text-sm font-bold pb-12"
-        >
-          Back to store 🏃‍♂️
-        </button>
+        {" "}
+        {cartStore.onCheckout === "cart" && (
+          <button
+            onClick={() => cartStore.toggleCart()}
+            className="text-sm font-bold pb-12"
+          >
+            Back to store 🏃‍♂️
+          </button>
+        )}
+        {cartStore.onCheckout === "checkout" && (
+          <button
+            onClick={() => cartStore.setCheckout("cart")}
+            className="text-sm font-bold pb-12"
+          >
+            Check you cart 🛒 🏃
+          </button>
+        )}
         {cartStore.onCheckout === "cart" && (
           <>
             {cartStore.cart.map((item) => (
@@ -98,7 +105,7 @@ const Cart = () => {
           </AnimatePresence>
         ) : (
           <motion.div layout>
-            <p>Total: {formatPrice(totalPrice)}</p>
+            <p>Total: {formatPrice(cartStore.totalAmount())}</p>
             <button
               onClick={() => cartStore.setCheckout("checkout")}
               className="py-2 mt-4 bg-teal-700 w-full rounded-md text-white"
