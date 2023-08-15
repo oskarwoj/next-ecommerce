@@ -1,16 +1,22 @@
 "use client";
 
+import basket from "@/public/basket.png";
+
+import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 
 import { useCartStore } from "@/hooks/store";
-import basket from "@/public/basket.png";
 import { formatPrice } from "@/util/formatPrice";
-import { AnimatePresence, motion } from "framer-motion";
 import { MinusCircle, PlusCircle } from "lucide-react";
 import Checkout from "./Checkout";
 
-const Cart = () => {
+export default function Cart() {
   const cartStore = useCartStore();
+
+  //Total Price
+  const totalPrice = cartStore.cart.reduce((acc, item) => {
+    return acc + item.unit_amount! * item.quantity;
+  }, 0);
 
   return (
     <motion.div
@@ -20,18 +26,18 @@ const Cart = () => {
       onClick={() => cartStore.toggleCart()}
       className="fixed w-full h-screen left-0 top-0 bg-black/25"
     >
+      {/* Cart */}
       <motion.div
         layout
         onClick={(e) => e.stopPropagation()}
-        className="bg-white absolute right-0 top-0 w-full lg:w-2/5 overflow-y-auto h-screen p-12 text-gray-700"
+        className="bg-white absolute right-0 top-0  h-screen p-12 overflow-y-scroll  w-full lg:w-2/5"
       >
-        {" "}
         {cartStore.onCheckout === "cart" && (
           <button
             onClick={() => cartStore.toggleCart()}
             className="text-sm font-bold pb-12"
           >
-            Back to store 🏃‍♂️
+            Back to store 🏃
           </button>
         )}
         {cartStore.onCheckout === "checkout" && (
@@ -39,32 +45,38 @@ const Cart = () => {
             onClick={() => cartStore.setCheckout("cart")}
             className="text-sm font-bold pb-12"
           >
-            Check you cart 🛒 🏃
+            Check your cart 🛒
           </button>
         )}
+        {/* Cart Items */}
         {cartStore.onCheckout === "cart" && (
           <>
             {cartStore.cart.map((item) => (
-              <motion.div layout key={item.id} className="flex py-4 gap-4">
+              <motion.div
+                layout
+                key={item.id}
+                className="flex p-4 gap-4 bg-base-100 my-4 rounded-lg "
+              >
                 <Image
-                  className="rounded-md h-23 object-cover w-auto"
+                  className="rounded-md h-24"
                   src={item.image}
+                  alt={item.name}
                   width={120}
                   height={120}
-                  alt={item.name}
                 />
                 <div>
                   <h2>{item.name}</h2>
+                  {/* Update quantity of a product */}
                   <div className="flex gap-2">
                     <h2>Quantity: {item.quantity}</h2>
                     <button
                       onClick={() =>
                         cartStore.removeProduct({
                           id: item.id,
-                          name: item.name,
-                          quantity: item.quantity,
-                          unit_amount: item.unit_amount,
                           image: item.image,
+                          name: item.name,
+                          unit_amount: item.unit_amount,
+                          quantity: item.quantity,
                         })
                       }
                     >
@@ -74,38 +86,29 @@ const Cart = () => {
                       onClick={() =>
                         cartStore.addProduct({
                           id: item.id,
-                          name: item.name,
-                          quantity: item.quantity,
-                          unit_amount: item.unit_amount,
                           image: item.image,
+                          name: item.name,
+                          unit_amount: item.unit_amount,
+                          quantity: item.quantity,
                         })
                       }
                     >
                       <PlusCircle />
                     </button>
                   </div>
-                  <p className="text-sm">{formatPrice(item.unit_amount)}</p>
+
+                  <p className="text-sm">
+                    {item.unit_amount && formatPrice(item.unit_amount)}
+                  </p>
                 </div>
               </motion.div>
             ))}
           </>
         )}
-        {cartStore.onCheckout === "checkout" && <Checkout />}
-        {!cartStore.cart.length ? (
-          <AnimatePresence>
-            <motion.div
-              animate={{ scale: 1, rotateZ: 0, opacity: 0.75 }}
-              initial={{ scale: 0.5, rotateZ: -10, opacity: 0 }}
-              exit={{ scale: 1, rotateZ: 0, opacity: 0.75 }}
-              className="flex flex-col items-center gap-12 text-2xl font-medium opacity-75 mt-12"
-            >
-              <h1>Your cart is empty 😢</h1>
-              <Image src={basket} width={200} height={200} alt="basket" />
-            </motion.div>
-          </AnimatePresence>
-        ) : (
+        {/* Checkout and total */}
+        {cartStore.cart.length > 0 && cartStore.onCheckout === "cart" ? (
           <motion.div layout>
-            <p>Total: {formatPrice(cartStore.totalAmount())}</p>
+            <p>Total: {formatPrice(totalPrice)}</p>
             <button
               onClick={() => cartStore.setCheckout("checkout")}
               className="py-2 mt-4 bg-teal-700 w-full rounded-md text-white"
@@ -113,10 +116,24 @@ const Cart = () => {
               Checkout
             </button>
           </motion.div>
-        )}
+        ) : null}
+        {/* Checkout Form */}
+        {cartStore.onCheckout === "checkout" && <Checkout />}
+
+        <AnimatePresence>
+          {!cartStore.cart.length && cartStore.onCheckout === "cart" && (
+            <motion.div
+              animate={{ scale: 1, rotateZ: 0, opacity: 0.75 }}
+              initial={{ scale: 0.5, rotateZ: -10, opacity: 0 }}
+              exit={{ scale: 0.5, rotateZ: -10, opacity: 0 }}
+              className="flex flex-col items-center gap-12 text-2xl font-medium pt-56 opacity-75"
+            >
+              <h1>Cart is empty 😢</h1>
+              <Image src={basket} alt="empty cart" width={200} height={200} />
+            </motion.div>
+          )}
+        </AnimatePresence>
       </motion.div>
     </motion.div>
   );
-};
-
-export default Cart;
+}
