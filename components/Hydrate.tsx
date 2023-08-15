@@ -1,8 +1,7 @@
 "use client";
 
+import { Loader } from "@/components/ui/loader";
 import { useEffect, useState } from "react";
-
-import { Loader } from "lucide-react";
 
 const Hydrate = ({ children }: { children: React.ReactNode }) => {
   const [isHydrated, setIsHydrated] = useState(false);
@@ -16,7 +15,7 @@ const Hydrate = ({ children }: { children: React.ReactNode }) => {
       {isHydrated ? (
         <>{children}</>
       ) : (
-        <div>
+        <div className="flex h-full w-full items-center justify-center">
           <Loader />
         </div>
       )}
