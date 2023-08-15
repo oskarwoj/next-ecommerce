@@ -39,6 +39,12 @@ export const authOptions: AuthOptions = {
       }
     },
   },
+  callbacks: {
+    async session({ session, token, user }) {
+      session.user = user;
+      return session;
+    },
+  },
 };
 
 const handler = NextAuth(authOptions);

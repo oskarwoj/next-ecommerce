@@ -12,7 +12,7 @@ const stripePromise = loadStripe(
 const Checkout = () => {
   const cartStore = useCartStore();
   const router = useRouter();
-  const [clientSecret, setClientSecret] = useState("");
+  const [, setClientSecret] = useState("");
 
   useEffect(() => {
     fetch("/api/create-payment-intent", {
@@ -28,7 +28,14 @@ const Checkout = () => {
           return router.push("/api/auth/signin");
         } else return res.json();
       })
-      .then((data) => console.log(data));
+      .then((data) => {
+        if (!data) {
+          return;
+        }
+        setClientSecret(data.client_secret);
+        cartStore.setPaymentIntent(data.id);
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return <div>Checkout</div>;
 };
