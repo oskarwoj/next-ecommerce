@@ -7,6 +7,7 @@ import basket from "@/public/basket.png";
 import { formatPrice } from "@/util/formatPrice";
 import { AnimatePresence, motion } from "framer-motion";
 import { MinusCircle, PlusCircle } from "lucide-react";
+import Checkout from "./Checkout";
 
 const Cart = () => {
   const cartStore = useCartStore();
@@ -34,51 +35,55 @@ const Cart = () => {
         >
           Back to store 🏃‍♂️
         </button>
-        {cartStore.cart.map((item) => (
-          <motion.div layout key={item.id} className="flex py-4 gap-4">
-            <Image
-              className="rounded-md h-23 object-cover w-auto"
-              src={item.image}
-              width={120}
-              height={120}
-              alt={item.name}
-            />
-            <div>
-              <h2>{item.name}</h2>
-              <div className="flex gap-2">
-                <h2>Quantity: {item.quantity}</h2>
-                <button
-                  onClick={() =>
-                    cartStore.removeProduct({
-                      id: item.id,
-                      name: item.name,
-                      quantity: item.quantity,
-                      unit_amount: item.unit_amount,
-                      image: item.image,
-                    })
-                  }
-                >
-                  <MinusCircle />
-                </button>
-                <button
-                  onClick={() =>
-                    cartStore.addProduct({
-                      id: item.id,
-                      name: item.name,
-                      quantity: item.quantity,
-                      unit_amount: item.unit_amount,
-                      image: item.image,
-                    })
-                  }
-                >
-                  <PlusCircle />
-                </button>
-              </div>
-              <p className="text-sm">{formatPrice(item.unit_amount)}</p>
-            </div>
-          </motion.div>
-        ))}
-
+        {cartStore.onCheckout === "cart" && (
+          <>
+            {cartStore.cart.map((item) => (
+              <motion.div layout key={item.id} className="flex py-4 gap-4">
+                <Image
+                  className="rounded-md h-23 object-cover w-auto"
+                  src={item.image}
+                  width={120}
+                  height={120}
+                  alt={item.name}
+                />
+                <div>
+                  <h2>{item.name}</h2>
+                  <div className="flex gap-2">
+                    <h2>Quantity: {item.quantity}</h2>
+                    <button
+                      onClick={() =>
+                        cartStore.removeProduct({
+                          id: item.id,
+                          name: item.name,
+                          quantity: item.quantity,
+                          unit_amount: item.unit_amount,
+                          image: item.image,
+                        })
+                      }
+                    >
+                      <MinusCircle />
+                    </button>
+                    <button
+                      onClick={() =>
+                        cartStore.addProduct({
+                          id: item.id,
+                          name: item.name,
+                          quantity: item.quantity,
+                          unit_amount: item.unit_amount,
+                          image: item.image,
+                        })
+                      }
+                    >
+                      <PlusCircle />
+                    </button>
+                  </div>
+                  <p className="text-sm">{formatPrice(item.unit_amount)}</p>
+                </div>
+              </motion.div>
+            ))}
+          </>
+        )}
+        {cartStore.onCheckout === "checkout" && <Checkout />}
         {!cartStore.cart.length ? (
           <AnimatePresence>
             <motion.div
@@ -94,7 +99,10 @@ const Cart = () => {
         ) : (
           <motion.div layout>
             <p>Total: {formatPrice(totalPrice)}</p>
-            <button className="py-2 mt-4 bg-teal-700 w-full rounded-md text-white">
+            <button
+              onClick={() => cartStore.setCheckout("checkout")}
+              className="py-2 mt-4 bg-teal-700 w-full rounded-md text-white"
+            >
               Checkout
             </button>
           </motion.div>
