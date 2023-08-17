@@ -7,6 +7,8 @@ import { useEffect, useState } from "react";
 
 import CheckoutForm from "@/components/CheckoutForm";
 import { useCartStore } from "@/hooks/store";
+import { motion } from "framer-motion";
+import OrderAnimation from "./OrderAnimation";
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string
@@ -51,12 +53,14 @@ const Checkout = () => {
 
   return (
     <div>
-      {clientSecret && (
-        <div>
+      {clientSecret ? (
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
           <Elements options={options} stripe={stripePromise}>
             <CheckoutForm clientSecret={clientSecret} />
           </Elements>
-        </div>
+        </motion.div>
+      ) : (
+        <OrderAnimation />
       )}
     </div>
   );
