@@ -1,10 +1,9 @@
 import Stripe from "stripe";
 
+import getCurrentUser from "@/app/actions/getCurrentUser";
 import { AddCartType } from "@/types/AddCartTypes";
 import { prismadb } from "@/util/prismadb";
-import { getServerSession } from "next-auth/next";
 import { NextResponse } from "next/server";
-import { authOptions } from "../auth/[...nextauth]/route";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
   apiVersion: "2022-11-15",
@@ -26,10 +25,9 @@ interface IItemTypes {
 }
 
 export async function POST(request: Request) {
-  //Get user
-  const userSession = await getServerSession(authOptions);
+  const currentUser = await getCurrentUser();
 
-  if (!userSession?.user) {
+  if (!currentUser) {
     return new NextResponse("Not logged in", { status: 403 });
   }
 
@@ -41,7 +39,7 @@ export async function POST(request: Request) {
 
   const orderData = {
     //@ts-ignore
-    user: { connect: { id: userSession.user?.id } },
+    user: { connect: { id: currentUser.id } },
     amount: total,
     currency: "pln",
     status: "pending",

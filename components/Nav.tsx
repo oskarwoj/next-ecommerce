@@ -5,7 +5,6 @@ import { Session } from "next-auth";
 import { signIn, signOut } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 
 import Cart from "@/components/Cart";
 import { useCartStore } from "@/hooks/store";
@@ -13,10 +12,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import DarkLight from "./DarkLight";
 
 const Nav: React.FC<Session> = ({ user }) => {
-  const pathname = usePathname();
   const cartStore = useCartStore();
-
-  const isHomePage = pathname === "/";
 
   return (
     <nav>
