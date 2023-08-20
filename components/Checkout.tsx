@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import CheckoutForm from "@/components/CheckoutForm";
-import { useCartStore } from "@/hooks/store";
+import { useCartStore, useThemeStore } from "@/hooks/store";
 import { motion } from "framer-motion";
 import OrderAnimation from "./OrderAnimation";
 
@@ -16,6 +16,7 @@ const stripePromise = loadStripe(
 
 const Checkout = () => {
   const cartStore = useCartStore();
+  const themeStore = useThemeStore();
   const router = useRouter();
   const [clientSecret, setClientSecret] = useState("");
 
@@ -46,7 +47,7 @@ const Checkout = () => {
   const options: StripeElementsOptions = {
     clientSecret,
     appearance: {
-      theme: "stripe",
+      theme: themeStore.mode === "light" ? "stripe" : "night",
       labels: "floating",
     },
   };

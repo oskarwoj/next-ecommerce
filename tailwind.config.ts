@@ -14,10 +14,15 @@ const config: Config = {
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
       gridTemplateColumns: {
-        fluid: "repeat(auto-fit,minmax(15rem,1fr))",
+        fluid: "repeat(auto-fit,minmax(20rem,1fr))",
+      },
+      fontFamily: {
+        lobster: ["var(--font-lobster)"],
+        roboto: ["var(--font-roboto)"],
       },
     },
   },
-  plugins: [],
+  plugins: [require("daisyui")],
+  daisyui: { themes: ["light", "dark"] },
 };
 export default config;

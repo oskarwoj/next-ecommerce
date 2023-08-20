@@ -31,7 +31,7 @@ export default function Cart() {
       <motion.div
         layout
         onClick={(e) => e.stopPropagation()}
-        className="bg-white absolute right-0 top-0  h-screen p-12 overflow-y-scroll  w-full lg:w-2/5"
+        className="bg-base-300 absolute right-0 top-0  h-screen p-12 overflow-y-scroll  w-full lg:w-2/5"
       >
         {cartStore.onCheckout === "cart" && (
           <button
@@ -112,7 +112,7 @@ export default function Cart() {
             <p>Total: {formatPrice(totalPrice)}</p>
             <button
               onClick={() => cartStore.setCheckout("checkout")}
-              className="py-2 mt-4 bg-teal-700 w-full rounded-md text-white"
+              className="py-2 mt-4 bg-primary w-full rounded-md text-white"
             >
               Checkout
             </button>

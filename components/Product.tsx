@@ -16,7 +16,7 @@ const Product: React.FC<ProductType> = ({
   const { features } = metadata;
 
   return (
-    <div className="text-gray-700">
+    <div>
       <Link
         href={{
           pathname: `/product/${id}`,
@@ -42,7 +42,9 @@ const Product: React.FC<ProductType> = ({
       <h1 className="text-sm font-medium mt-2 m-y-2 py-2 border-b-2 border-gray-200 border-solid">
         {name}
       </h1>
-      <p className="text-lg font-semibold">{formatPrice(unit_amount)}</p>
+      <p className="text-lg font-semibold text-primary">
+        {formatPrice(unit_amount)}
+      </p>
     </div>
   );
 };
