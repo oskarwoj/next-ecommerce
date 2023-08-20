@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import CheckoutForm from "@/components/CheckoutForm";
 import { useCartStore, useThemeStore } from "@/hooks/store";
 import { motion } from "framer-motion";
+import { signIn } from "next-auth/react";
 import OrderAnimation from "./OrderAnimation";
 
 const stripePromise = loadStripe(
@@ -31,7 +32,7 @@ const Checkout = () => {
     })
       .then((res) => {
         if (res.status === 403) {
-          return router.push("/api/auth/signin");
+          return signIn("google");
         } else return res.json();
       })
       .then((data) => {
