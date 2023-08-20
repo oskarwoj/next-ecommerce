@@ -5,12 +5,6 @@ import Stripe from "stripe";
 import { prismadb } from "@/util/prismadb";
 import { stripe } from "@/util/stripe";
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
-
 export async function POST(req: Request) {
   const body = await req.text();
   const signature = headers().get("Stripe-Signature") as string;

@@ -53,6 +53,7 @@ const Nav: React.FC<Session> = ({ user }) => {
                   width={36}
                   height={36}
                   className="rounded-full"
+                  priority={true}
                   tabIndex={0}
                 />
                 <ul

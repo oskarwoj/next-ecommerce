@@ -64,6 +64,7 @@ export default function Cart() {
                   alt={item.name}
                   width={120}
                   height={120}
+                  priority={true}
                 />
                 <div>
                   <h2>{item.name}</h2>
@@ -136,6 +137,7 @@ export default function Cart() {
                 width={200}
                 height={200}
                 className="w-auto"
+                priority={true}
               />
             </motion.div>
           )}
