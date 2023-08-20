@@ -35,7 +35,7 @@ const Product: React.FC<ProductType> = ({
           width={800}
           height={800}
           alt={name}
-          className="w-full h-80 object-cover cursor-pointer hover:scale-105 transition-all duration-300 ease-in-out rounded-lg"
+          className="w-auto h-80 object-cover cursor-pointer hover:scale-105 transition-all duration-300 ease-in-out rounded-lg"
           priority={true}
         />
       </Link>
